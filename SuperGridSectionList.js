@@ -26,7 +26,7 @@ class SuperGridSectionList extends Component {
     }
   }
 
-  
+
   onLayout(e) {
     const { staticDimension, onLayout } = this.props;
     if (!staticDimension) {
@@ -39,6 +39,17 @@ class SuperGridSectionList extends Component {
     // run onLayout callback if provided
     if (onLayout) {
       onLayout(e);
+    }
+  }
+
+  scrollToTop = () => {
+    if (this.refs.list) {
+      this.refs.list.scrollToLocation({
+        sectionIndex: 0,
+        itemIndex: 0,
+        viewPosition: 0,
+        animated: true,
+      });
     }
   }
 
@@ -111,12 +122,12 @@ class SuperGridSectionList extends Component {
     const { itemsPerRow } = this.state;
 
     //Deep copy, so that re-renders and chunkArray functions don't affect the actual items object
-    let sectionsCopy = cloneDeep(sections); 
+    let sectionsCopy = cloneDeep(sections);
 
     for (sectionsPair of sectionsCopy){
 
       //Going through all the sections in sectionsCopy, and dividing their 'data' fields into smaller 'chunked' arrays to represent rows
-      const chunked = chunkArray(sectionsPair.data, itemsPerRow); 
+      const chunked = chunkArray(sectionsPair.data, itemsPerRow);
 
       //Now adding metadata to these rows
       const rows = chunked.map((r, i) => {
@@ -131,6 +142,7 @@ class SuperGridSectionList extends Component {
 
     return (
       <SectionList
+        ref="list"
         sections={sectionsCopy}
         renderSectionHeader = {renderSectionHeader}
         renderItem={this.renderHorizontalRow}
